@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+{%load staticfiles%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+      <link rel="stylesheet" href="{% static 'fonts/css/font-awesome.css' %}">
+
+</head>
+<style>
+body{
+  background-image:url('{%static 'img/raw.jpg'%}');
+   background-attachment:fixed;
+    background-size:cover;
+
+
+}
+.sen{
+ border-radius:30px;
+ width:250px;
+ height:100px;
+ float:right;
+
+}
+.bot{
+ border-radius:30px;
+ width:320px;
+ float:left;
+
+}
+.well,{
+ border-radius:20px;
+ width:300px;
+
+
+}
+
+</style>
+<body>
+
+ <img src="{%static 'img/bot.png' %}" alt="" class="responsive-img" style="float:left; margin-right:60px; " width="100px">
+
+
+
+<div class="container">
+
+<div class="panel ">
+    <div class="panel-heading w3-amber">
+
+
+        <P class="text-center">musa</P>
+ </div>
+    <div class="panel-body">
+
+             <div class="bot w3-round">
+
+            <p class="well w3-blue">Hello welcome
+                 chat with me about things
+              <p>
+
+
+            </p>
+
+             </div>
+         <br/>
+          <div class="sen" id="sen">
+
+
+             </div>
+
+    </div>
+
+
+
+
+    <div class="panel-footer">
+      <div class="form-group">
+        <input type="text" id="comment" class="form-control">
+
+        <br/>
+          <button  class=" btn fa fa-send fa-2x" aria-hidden="true" id="btn"></button>
+                <button  class="btn fa fa-microphone fa-2x" id="voice"></button>
+                  <button  class="btn  fa fa-map-marker fa-2x"  id="location" aria-hidden="true"></button>
+
+
+
+
+
+
+
+    </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+<script src="{% static '/js/jquery.js'%}"></script>
+<script src="{% static '/js/bootstrap.min.js'%}"></script>
+
+
+
+
+
+
+<script>
+
+
+$(document).ready(function () {
+
+            $('#comment').keypress(function (e) {
+                if (e.which == 13) {
+                    AddConversationRow();
+                }
+            });
+
+            $('#btn').on('click', AddConversationRow);
+
+
+            function AddConversationRow() {
+
+                var command = "";
+                command = $('#comment').val();
+
+                if (command != '') {
+
+                    $('#comment').val("");
+
+                    $(".sen").append(
+                                 '<br/>'+
+                                 '<br/>'+
+                                '<p class="well text-right  w3-yellow">'+
+
+                                  command+
+                                '</p>'
+
+                    );
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/chat/",
+                        cache: false,
+                        dataType: "json",
+                        data: {Command: command},
+                        success: function (data) {
+                            var answer = data['answer'];
+
+                            setTimeout(function () {
+                                $(".bot").append(
+                                         '<br/>'+
+                                          '<br/>'+
+                                       ' <p class=" well text-left w3-blue">'+
+
+                                         answer+
+                                       '</p> '
+
+
+                                );
+
+                            } , 1000);
+
+
+                        }
+                    })
+
+                }
+            }
+        });;
+
+
+
+
+
+
+
+
+        //microphone
+
+
+
+      $(function(){
+         $('#voice').on('click',function(){
+
+
+
+      var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+       recognition.lang = 'en-US';
+       recognition.interimResults = false;
+       recognition.maxAlternatives = 5;
+       recognition.start();
+
+       recognition.onresult = function(event) {
+                var command = event.results[0][0].transcript;
+
+                    $(".sen").append(
+                                 '<br/>'+
+                                 '<br/>'+
+                                '<p class="well w3-round text-right  w3-yellow">'+
+
+                                  event.results[0][0].transcript+
+                                '</p>'
+                    );
+
+         console.log('You said: ', event.results[0][0].transcript);
+
+           $.ajax({
+
+                        type: "POST",
+                        url: "/speech/",
+                        cache: false,
+                        dataType: "json",
+                        data: {Command: command},
+                         success: function (data) {
+                           var answer = data['answer'];
+                            setTimeout(function () {
+                                $(".bot").append(
+                                         '<br/>'+
+                                          '<br/>'+
+                                       ' <p class="well text-left w3-blue">'+
+
+                                         answer+
+                                       '</p> '
+
+
+                                );
+
+                            } , 1000);
+
+
+                        }
+
+
+
+
+
+                        });
+
+
+
+
+
+
+       };
+
+         });
+
+        });
+
+
+
+
+
+//geolocation
+
+      $(function(){
+           $('#location').on('click',function(){
+
+             var output =     $(".bot").append(
+                                         '<br/>'+
+                                          '<br/>'+
+                                       ' <p class="well h text-left w3-blue">'+
+
+
+                                       '</p> '
+
+
+                                );
+
+  if (!navigator.geolocation){
+    $('.h').html("<p>Geolocation is not supported by your browser</p>");
+    return;
+  }
+
+  function success(position) {
+    var latitude  = position.coords.latitude;
+    var longitude = position.coords.longitude;
+
+    $('.h').html('<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>');
+
+    var img = new Image();
+    img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
+
+      $('.h').append(img);
+  }
+
+  function error() {
+    output.innerHTML = "Unable to retrieve your location";
+  }
+
+  $('.h').html( "<p>Locating…</p>");
+
+  navigator.geolocation.getCurrentPosition(success, error);
+
+           });
+
+
+
+         });
+
+
+
+
+
+
+
+
+
+
+$.ajaxSetup({
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                         break;
+                     }
+                 }
+             }
+             return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+     }
+});;
+
+</script>
+
+</body>
+</html>

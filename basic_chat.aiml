@@ -1,0 +1,145 @@
+<aiml version="1.0.1" encoding="UTF-8">
+<!-- basic_chat.aiml -->
+
+    <category>
+        <pattern>HELLO</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+    
+    <category>
+        <pattern>WHO ARE YOU</pattern>
+        <template>
+            I'm a bot, silly!
+        </template>
+    </category>
+
+    <category>
+    <pattern>HOW THINGS</pattern>
+        <template>
+            <random>
+                <li>Go on.</li>
+                <li>How old are you?</li>
+                <li>Be more specific.</li>
+                <li>I did not know that.</li>
+                <li>Are you telling the truth?</li>
+                <li>I don't know what that means.</li>
+                <li>Try to tell me that another way.</li>
+                <li>Are you talking about an animal, vegetable or mineral?</li>
+                <li>What is it?</li>
+            </random>
+        </template>
+    </category>
+
+    <category>
+        <pattern>4</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>5</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>6</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>7</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>8</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+    <category>
+<pattern>WHAT TIME IS IT</pattern>
+<template>
+The time is <javascript>
+<![CDATA[
+ var now = new java.util.Date()
+ var hour = now.getHours()
+ var minute = now.getMinutes()
+ now = null
+ var ampm = ""
+
+ // validate hour values and set value of ampm
+ if (hour >= 12) {
+  hour -= 12
+  ampm = "PM"
+ } else
+ampm = "AM"
+hour = (hour == 0) ? 12 : hour
+
+// add zero digit to a one digit minute
+if (minute < 10)
+ minute = "0" + minute // do not parse this number!
+hour + ":" + minute + " " + ampm;
+]]>
+</javascript>
+</template>
+</category>
+
+    <category>
+        <pattern>9</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>10</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>11</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>12</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>13</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>14</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+
+    <category>
+        <pattern>15</pattern>
+        <template>
+            Well, hello!
+        </template>
+    </category>
+</aiml>
